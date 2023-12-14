@@ -22,7 +22,7 @@ app.use((error, request, response, next) => {
 
   return response.status(500).json({
     status: "error",
-    message: "intermal server error"
+    message: "internal server error"
   });
 });
 
