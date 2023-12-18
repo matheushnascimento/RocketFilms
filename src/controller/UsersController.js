@@ -19,6 +19,36 @@ class UsersController {
 
     response.json();
   }
+
+  async update(request, response) {
+    const { name, email, old_password, password } = request.body;
+    const { id } = request.params;
+    const userExists =
+      (await knex.select("id").from("users").where("id", id)).length > 0
+        ? true
+        : false;
+
+    if (!userExists) {
+      throw new AppError("Usuário não encontrado");
+    }
+
+    const emailExists =
+      (await knex.select("email").from("users").where("email", email)).length >
+      0
+        ? true
+        : false;
+
+    if (emailExists) {
+      throw new AppError("Esse e-mail já está em uso");
+    }
+
+    await knex("users").where("id", id).update({
+      name,
+      email,
+    });
+
+    response.json();
+  }
 }
 
 module.exports = UsersController;
